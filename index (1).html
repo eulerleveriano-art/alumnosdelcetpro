@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07030d">
+<title>CETPRO San Pedro de Aplao</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07030d; --panel:#120824; --panel2:#1a0d33; --line:#3a2263;
+  --pink:#ff2e9a; --cyan:#19f0ff; --yellow:#ffe14d; --violet:#8b5cff;
+  --text:#f4eeff; --muted:#a99bc9; --ok:#3dffa0; --err:#ff5d6c;
+  --display:'Bungee',system-ui,sans-serif; --body:'Outfit',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0}
+html{color-scheme:dark;-webkit-text-size-adjust:100%}
+body{min-height:100vh;font-family:var(--body);color:var(--text);background:var(--bg);line-height:1.5;overflow-x:hidden}
+body::before{
+  content:"";position:fixed;inset:0;z-index:-3;
+  background:
+    radial-gradient(520px 380px at 88% 0%,rgba(255,46,154,.38),transparent 70%),
+    radial-gradient(620px 460px at 0% 35%,rgba(25,240,255,.22),transparent 70%),
+    radial-gradient(640px 480px at 70% 105%,rgba(139,92,255,.32),transparent 70%);
+}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--cyan);outline-offset:3px;border-radius:8px}
+
+/* Ecualizador de fondo */
+#eq{position:fixed;left:0;right:0;bottom:0;height:46vh;display:flex;align-items:flex-end;gap:clamp(3px,.7vw,8px);
+  padding:0 clamp(4px,1vw,12px);z-index:-2;pointer-events:none;opacity:.5;
+  -webkit-mask-image:linear-gradient(to top,#000 25%,transparent);mask-image:linear-gradient(to top,#000 25%,transparent)}
+#eq i{flex:1;min-width:3px;height:100%;border-radius:6px 6px 0 0;transform-origin:bottom;transform:scaleY(.2);
+  background:linear-gradient(to top,var(--violet),var(--pink) 60%,var(--yellow));animation:eq 1.2s ease-in-out infinite alternate}
+@keyframes eq{to{transform:scaleY(var(--h))}}
+
+/* Barra superior (solo en secciones internas) */
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px clamp(16px,4vw,40px)}
+body.home .topbar{display:none}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.emblem{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;font-family:var(--display);font-size:22px;color:#10041a;
+  background:linear-gradient(135deg,var(--yellow),var(--pink));box-shadow:0 0 22px rgba(255,46,154,.65)}
+.brand b{font-family:var(--display);font-size:.85rem;line-height:1.1;display:block;font-weight:400}
+.brand small{color:var(--muted);font-size:.74rem}
+.back{text-decoration:none;font-weight:600;font-size:.92rem;padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:rgba(18,8,36,.75);transition:.2s}
+.back:hover{border-color:var(--cyan);box-shadow:0 0 16px rgba(25,240,255,.4)}
+
+.view{display:none}
+.view.active{display:block}
+
+/* Portada */
+.hero{display:flex;flex-direction:column;align-items:center;text-align:center;padding:clamp(28px,8vh,80px) 20px 30px;max-width:920px;margin:0 auto}
+.hero .emblem{width:88px;height:88px;font-size:46px;border-radius:26px;margin-bottom:26px;animation:glow 3s ease-in-out infinite}
+@keyframes glow{50%{box-shadow:0 0 46px rgba(255,46,154,.95),0 0 90px rgba(25,240,255,.35)}}
+.neon{font-family:var(--display);font-weight:400;line-height:.98;color:#fff}
+.neon .l1{display:block;font-size:clamp(3rem,16vw,7.5rem);
+  text-shadow:0 0 6px #fff,0 0 18px var(--pink),0 0 44px var(--pink),0 0 90px var(--pink)}
+.neon .l2{display:block;margin-top:.45em;font-size:clamp(1rem,5vw,2.1rem);color:#eaffff;
+  text-shadow:0 0 6px #fff,0 0 16px var(--cyan),0 0 40px var(--cyan)}
+.hero h2{font-family:var(--display);font-weight:400;font-size:clamp(1.1rem,4.5vw,1.6rem);color:var(--yellow);margin:30px 0 8px;text-shadow:0 0 14px rgba(255,225,77,.6)}
+.hero p{color:var(--muted);font-size:1.05rem;max-width:480px;margin-bottom:30px}
+.menu{display:grid;gap:14px;width:min(100%,480px)}
+.big{display:flex;align-items:center;gap:16px;text-decoration:none;font-weight:700;font-size:1.12rem;padding:18px 22px;border-radius:18px;text-align:left;
+  border:1.5px solid var(--c);background:linear-gradient(90deg,color-mix(in srgb,var(--c) 20%,transparent),rgba(18,8,36,.88));
+  box-shadow:0 0 18px color-mix(in srgb,var(--c) 45%,transparent),inset 0 0 18px color-mix(in srgb,var(--c) 12%,transparent);
+  transition:transform .15s,box-shadow .2s}
+.big:hover{transform:translateY(-3px);box-shadow:0 0 40px color-mix(in srgb,var(--c) 80%,transparent),inset 0 0 22px color-mix(in srgb,var(--c) 20%,transparent)}
+.big i{font-style:normal;font-size:1.8rem;filter:drop-shadow(0 0 8px var(--c))}
+.big small{display:block;font-weight:400;color:var(--muted);font-size:.85rem}
+.programs{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:34px}
+footer{text-align:center;color:var(--muted);font-size:.82rem;padding:10px 16px 30px}
+
+/* Secciones internas */
+.wrap{width:min(100% - 32px,720px);margin:12px auto 60px}
+.wrap.wide{width:min(100% - 32px,1040px)}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,6vw,2.6rem);line-height:1.05;color:#fff;
+  text-shadow:0 0 14px rgba(255,46,154,.85),0 0 40px rgba(255,46,154,.45);margin-bottom:6px}
+.lead{color:var(--muted);margin-bottom:22px}
+.card{background:linear-gradient(180deg,var(--panel2),var(--panel));border:1px solid var(--line);border-radius:22px;padding:clamp(18px,4vw,30px);
+  box-shadow:0 0 0 1px rgba(139,92,255,.12),0 20px 60px rgba(0,0,0,.55),0 0 60px rgba(139,92,255,.14)}
+.field{margin-bottom:16px}
+label{display:block;font-weight:600;font-size:.92rem;margin-bottom:6px}
+input,select{width:100%;font:inherit;font-size:1rem;color:var(--text);background:#0b0516;border:1.5px solid var(--line);border-radius:12px;padding:13px 14px;transition:.2s}
+input::placeholder{color:#6f5f90}
+input:focus,select:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(25,240,255,.2),0 0 18px rgba(25,240,255,.3)}
+input.bad,select.bad{border-color:var(--err)}
+.hint{font-size:.8rem;color:var(--muted);margin-top:4px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+.btn{font:inherit;font-weight:700;font-size:1rem;cursor:pointer;border:0;border-radius:14px;padding:14px 22px;width:100%;color:#16071f;
+  background:linear-gradient(135deg,var(--yellow),var(--pink));box-shadow:0 0 22px rgba(255,46,154,.55);transition:transform .15s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 0 34px rgba(255,46,154,.9)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.btn.cyan{background:linear-gradient(135deg,var(--cyan),var(--violet));box-shadow:0 0 22px rgba(25,240,255,.5)}
+.btn.ghost{background:transparent;color:var(--text);border:1.5px solid var(--line);box-shadow:none;width:auto}
+.btn.ghost:hover{border-color:var(--cyan);box-shadow:0 0 18px rgba(25,240,255,.4)}
+.inline{display:flex;gap:10px}
+.inline .btn{width:auto;white-space:nowrap}
+.msg{display:none;margin-top:16px;padding:13px 16px;border-radius:12px;font-weight:600;border:1px solid}
+.msg.show{display:block}
+.msg.ok{color:var(--ok);border-color:rgba(61,255,160,.5);background:rgba(61,255,160,.08)}
+.msg.err{color:var(--err);border-color:rgba(255,93,108,.5);background:rgba(255,93,108,.08)}
+.msg.info{color:var(--cyan);border-color:rgba(25,240,255,.5);background:rgba(25,240,255,.08)}
+.clock{display:inline-block;margin-bottom:18px;padding:8px 14px;border-radius:999px;border:1px solid var(--cyan);color:var(--cyan);font-weight:600;font-size:.9rem;background:rgba(25,240,255,.07)}
+.found{margin-top:20px;padding:20px;border-radius:18px;border:1px solid var(--cyan);background:rgba(25,240,255,.06);box-shadow:0 0 30px rgba(25,240,255,.18)}
+.found h2{font-family:var(--display);font-weight:400;font-size:1.35rem;margin-bottom:2px}
+.found p{color:var(--muted);margin-bottom:16px}
+.stats{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:16px}
+.counter{font-family:var(--display);font-size:1.05rem;padding:10px 18px;border-radius:14px;border:1px solid var(--pink);color:#fff;background:rgba(255,46,154,.12);text-shadow:0 0 10px var(--pink)}
+.stats input{flex:1 1 220px;width:auto}
+.tablebox{overflow-x:auto;border-radius:16px;border:1px solid var(--line);background:rgba(11,5,22,.8)}
+table{width:100%;border-collapse:collapse;min-width:640px}
+th,td{text-align:left;padding:13px 16px;border-bottom:1px solid rgba(58,34,99,.7);white-space:nowrap}
+th{font-size:.82rem;color:var(--cyan);background:#0b0516}
+tbody tr:hover{background:rgba(139,92,255,.14)}
+td.dni{font-variant-numeric:tabular-nums;letter-spacing:.06em;color:var(--muted)}
+.tag{display:inline-block;padding:3px 10px;border-radius:999px;font-size:.8rem;border:1px solid var(--violet);background:rgba(139,92,255,.16)}
+.empty{padding:34px;text-align:center;color:var(--muted)}
+.estado{width:min(100% - 32px,480px);margin:0 auto 12px;text-align:center;font-size:.85rem;padding:9px 14px;border-radius:12px;border:1px solid var(--line);color:var(--muted)}
+.estado.ok{color:var(--ok);border-color:rgba(61,255,160,.5)}
+.estado.mal{color:var(--err);border-color:rgba(255,93,108,.6);background:rgba(255,93,108,.08)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="home">
+<div id="eq" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a class="brand" href="#inicio"><span class="emblem">C</span><span><b>CETPRO</b><small>San Pedro de Aplao</small></span></a>
+  <a class="back" href="#inicio">← Inicio</a>
+</header>
+
+<!-- ================= INICIO ================= -->
+<section class="view" id="v-inicio">
+  <main class="hero">
+    <div class="emblem" aria-hidden="true">C</div>
+    <h1 class="neon" style="text-shadow:none;margin:0">
+      <span class="l1">CETPRO</span>
+      <span class="l2">SAN PEDRO DE APLAO</span>
+    </h1>
+    <h2>¡Bienvenido, estudiante!</h2>
+    <p>Regístrate, marca tu asistencia del día y consulta el listado desde tu celular o tu computadora.</p>
+    <nav class="menu" aria-label="Menú principal">
+      <a class="big" style="--c:var(--pink)" href="#registro"><i>✍️</i><span>Registrar estudiante<small>Inscríbete una sola vez con tu DNI</small></span></a>
+      <a class="big" style="--c:var(--cyan)" href="#asistencia"><i>✅</i><span>Marcar asistencia<small>Una marcación por día</small></span></a>
+      <a class="big" style="--c:var(--yellow)" href="#listado"><i>📋</i><span>Ver listado de asistencias<small>Busca por nombre</small></span></a>
+    </nav>
+    <div class="programs">
+      <span class="tag">Informática</span><span class="tag">Peluquería y Barbería</span><span class="tag">Corte y Ensamblaje</span>
+    </div>
+  </main>
+  <div id="estado" class="estado" role="status">Comprobando conexión…</div>
+  <footer>CETPRO San Pedro de Aplao · Aplao, Arequipa</footer>
+</section>
+
+<!-- ================= REGISTRO ================= -->
+<section class="view" id="v-registro">
+  <main class="wrap">
+    <h1>Registrar estudiante</h1>
+    <p class="lead">Completa todos los campos. Cada DNI se registra una sola vez.</p>
+    <form id="r-form" class="card" novalidate>
+      <div class="field"><label for="r-dni">DNI</label>
+        <input id="r-dni" inputmode="numeric" autocomplete="off" placeholder="8 dígitos" maxlength="8"></div>
+      <div class="row">
+        <div class="field"><label for="r-nombres">Nombres</label>
+          <input id="r-nombres" autocomplete="given-name" placeholder="Ej. María Elena"></div>
+        <div class="field"><label for="r-apellidos">Apellidos</label>
+          <input id="r-apellidos" autocomplete="family-name" placeholder="Ej. Quispe Mamani"></div>
+      </div>
+      <div class="field"><label for="r-programa">Programa de estudios</label>
+        <select id="r-programa">
+          <option value="">Selecciona un programa</option>
+          <option>Informática</option><option>Peluquería y Barbería</option><option>Corte y Ensamblaje</option>
+        </select></div>
+      <div class="field"><label for="r-celular">Celular</label>
+        <input id="r-celular" inputmode="numeric" autocomplete="tel" placeholder="9 dígitos, empieza con 9" maxlength="9">
+        <div class="hint">Solo lo usa el CETPRO. No aparece en ningún listado.</div></div>
+      <button class="btn" id="r-enviar" type="submit">Registrar estudiante</button>
+      <div id="r-msg" class="msg" role="status" aria-live="polite"></div>
+    </form>
+  </main>
+</section>
+
+<!-- ================= ASISTENCIA ================= -->
+<section class="view" id="v-asistencia">
+  <main class="wrap">
+    <h1>Marcar asistencia</h1>
+    <p class="lead">Escribe tu DNI, comprueba que eres tú y confirma.</p>
+    <div class="clock" id="a-reloj">—</div>
+    <section class="card">
+      <form id="a-buscar" class="field" novalidate>
+        <label for="a-dni">DNI</label>
+        <div class="inline">
+          <input id="a-dni" inputmode="numeric" autocomplete="off" placeholder="8 dígitos" maxlength="8">
+          <button class="btn cyan" id="a-btnBuscar" type="submit">Buscar</button>
+        </div>
+      </form>
+      <div id="a-found" class="found" hidden>
+        <h2 id="a-nombre"></h2><p id="a-programa"></p>
+        <button class="btn" id="a-confirmar" type="button">Confirmar mi asistencia</button>
+      </div>
+      <div id="a-msg" class="msg" role="status" aria-live="polite"></div>
+    </section>
+  </main>
+</section>
+
+<!-- ================= LISTADO ================= -->
+<section class="view" id="v-listado">
+  <main class="wrap wide">
+    <h1>Listado de asistencias</h1>
+    <p class="lead">Las más recientes primero. El DNI se muestra parcialmente.</p>
+    <div class="stats">
+      <div class="counter" id="l-contador">Total: 0</div>
+      <input id="l-buscar" type="search" placeholder="Buscar por nombre…" aria-label="Buscar por nombre" autocomplete="off">
+      <button class="btn ghost" id="l-recargar" type="button">Actualizar</button>
+    </div>
+    <div class="tablebox">
+      <table>
+        <thead><tr><th>Nombre</th><th>Programa</th><th>Fecha</th><th>Hora</th><th>DNI</th></tr></thead>
+        <tbody id="l-filas"></tbody>
+      </table>
+      <div id="l-vacio" class="empty" hidden></div>
+    </div>
+    <div id="l-msg" class="msg" role="status" aria-live="polite"></div>
+  </main>
+</section>
+
+<script>
+/* ============ Conexión directa a Firestore (sin librerías externas) ============ */
+const API_KEY = "AIzaSyDJHzWpDwAV1T25BtCNl7mW1VA6f9FD6zo";
+const PROYECTO = "alumnos-del-cetpro";
+const RAIZ = `projects/${PROYECTO}/databases/(default)/documents`;
+const URL_BASE = `https://firestore.googleapis.com/v1/${RAIZ}`;
+
+async function llamar(url, opciones){
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), 15000);
+  let r;
+  try { r = await fetch(url, Object.assign({ signal: ctrl.signal }, opciones)); }
+  catch (e) { throw { code: e.name === "AbortError" ? "TIMEOUT" : "NETWORK", message: String(e) }; }
+  finally { clearTimeout(t); }
+  let data = null;
+  try { data = await r.json(); } catch (_) {}
+  if (!r.ok){
+    const e = (data && (Array.isArray(data) ? data[0] : data).error) || {};
+    throw { code: e.status || ("HTTP_" + r.status), http: r.status, message: e.message || "" };
+  }
+  return data;
+}
+const post = (ruta, cuerpo) => llamar(`${ruta}?key=${API_KEY}`, {
+  method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(cuerpo)
+});
+const campos = (o) => Object.fromEntries(Object.entries(o).map(([k, v]) => [k, { stringValue: String(v) }]));
+const texto = (f) => (f && f.stringValue) || "";
+
+/* Lee un documento. Devuelve sus datos o null si no existe */
+async function leerDoc(coleccion, id){
+  try {
+    const d = await llamar(`${URL_BASE}/${coleccion}/${encodeURIComponent(id)}?key=${API_KEY}`);
+    return Object.fromEntries(Object.entries(d.fields || {}).map(([k, v]) => [k, texto(v)]));
+  } catch (e) {
+    if (e.http === 404 && !/database/i.test(e.message)) return null;
+    throw e;
+  }
+}
+/* Crea documentos de forma atómica; falla si alguno ya existe */
+function crearDocs(lista){
+  const writes = lista.map(({ coleccion, id, datos }) => ({
+    update: { name: `${RAIZ}/${coleccion}/${id}`, fields: campos(datos) },
+    updateTransforms: [{ fieldPath: "creado", setToServerValue: "REQUEST_TIME" }],
+    currentDocument: { exists: false }
+  }));
+  return post(`https://firestore.googleapis.com/v1/${RAIZ}:commit`, { writes });
+}
+const yaExiste = (e) => e && (e.code === "ALREADY_EXISTS" || (e.code === "FAILED_PRECONDITION" && /already exists/i.test(e.message)));
+
+async function ultimasAsistencias(n){
+  const r = await post(`https://firestore.googleapis.com/v1/${RAIZ}:runQuery`, {
+    structuredQuery: { from: [{ collectionId: "asistencias" }],
+      orderBy: [{ field: { fieldPath: "creado" }, direction: "DESCENDING" }], limit: n }
+  });
+  return r.filter(x => x.document).map(x => x.document.fields);
+}
+
+/* ============ Utilidades ============ */
+const PROGRAMAS = ["Informática", "Peluquería y Barbería", "Corte y Ensamblaje"];
+const $ = (id) => document.getElementById(id);
+const aviso = (el, tipo, t) => { el.className = "msg show " + tipo; el.textContent = t; };
+const soloDigitos = (el, max) => el.addEventListener("input", () => { el.value = el.value.replace(/\D/g, "").slice(0, max); });
+const normalizar = (t) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+const titulo = (t) => t.trim().replace(/\s+/g, " ").toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+const ocultarDni = (d) => d.slice(0, 2) + "****" + d.slice(-2);
+const fechaBonita = (f) => { const [y, m, d] = f.split("-"); return `${d}/${m}/${y}`; };
+
+function ahoraLima(){
+  const d = new Date();
+  return {
+    fecha: new Intl.DateTimeFormat("en-CA", { timeZone: "America/Lima" }).format(d),
+    hora: new Intl.DateTimeFormat("en-GB", { timeZone: "America/Lima", hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }).format(d)
+  };
+}
+function errorFirebase(err, porDefecto){
+  const c = err && err.code, m = (err && err.message) || "";
+  if (c === "NETWORK") return "No hay conexión con Google (firestore.googleapis.com). Revisa tu internet. Si estás en una vista previa o en una red con filtros, abre index.html en Chrome con doble clic o prueba con datos móviles.";
+  if (c === "TIMEOUT") return "Firestore tardó demasiado en responder. Revisa tu internet e inténtalo otra vez.";
+  if (c === "PERMISSION_DENIED" && /has not been used|disabled/i.test(m)) return "Falta activar Cloud Firestore API en Google Cloud para este proyecto. Abre el enlace que aparece en la consola (F12) y pulsa Habilitar.";
+  if (c === "PERMISSION_DENIED") return "Las reglas de Firestore bloquearon la operación. En Firebase: Firestore Database → Reglas → pega las reglas nuevas → Publicar.";
+  if (c === "NOT_FOUND" || (err && err.http === 404)) return "No existe la base de datos. En Firebase entra a Firestore Database y pulsa Crear base de datos.";
+  if (c === "INVALID_ARGUMENT" || c === "HTTP_400") return "Firebase rechazó la solicitud: " + m;
+  return porDefecto + (c ? ` (${c}${m ? ": " + m : ""})` : "");
+}
+
+/* ============ Fondo: ecualizador ============ */
+(function(){
+  const eq = $("eq"); const n = Math.min(44, Math.floor(innerWidth / 14));
+  for (let i = 0; i < n; i++){
+    const b = document.createElement("i");
+    b.style.setProperty("--h", (0.25 + Math.random() * 0.75).toFixed(2));
+    b.style.animationDuration = (0.7 + Math.random() * 1.1).toFixed(2) + "s";
+    b.style.animationDelay = (-Math.random() * 2).toFixed(2) + "s";
+    eq.append(b);
+  }
+})();
+
+/* ============ Navegación ============ */
+let relojId = null;
+function ruta(){
+  const v = location.hash.slice(1);
+  const vista = ["registro", "asistencia", "listado"].includes(v) ? v : "inicio";
+  document.querySelectorAll(".view").forEach(s => s.classList.toggle("active", s.id === "v-" + vista));
+  document.body.classList.toggle("home", vista === "inicio");
+  window.scrollTo(0, 0);
+  clearInterval(relojId);
+  if (vista === "asistencia"){
+    const pintar = () => { const a = ahoraLima(); $("a-reloj").textContent = `Hoy ${fechaBonita(a.fecha)} · ${a.hora}`; };
+    pintar(); relojId = setInterval(pintar, 1000);
+  }
+  if (vista === "listado") cargarListado();
+}
+window.addEventListener("hashchange", ruta);
+
+/* ============ Registrar estudiante ============ */
+soloDigitos($("r-dni"), 8);
+soloDigitos($("r-celular"), 9);
+$("r-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const msg = $("r-msg");
+  ["dni", "nombres", "apellidos", "programa", "celular"].forEach(c => $("r-" + c).classList.remove("bad"));
+  const dni = $("r-dni").value.trim();
+  const nombres = titulo($("r-nombres").value);
+  const apellidos = titulo($("r-apellidos").value);
+  const programa = $("r-programa").value;
+  const celular = $("r-celular").value.trim();
+
+  const errores = [];
+  if (!/^\d{8}$/.test(dni)) errores.push(["dni", "El DNI debe tener exactamente 8 dígitos."]);
+  if (nombres.length < 2) errores.push(["nombres", "Escribe tus nombres."]);
+  if (apellidos.length < 2) errores.push(["apellidos", "Escribe tus apellidos."]);
+  if (!PROGRAMAS.includes(programa)) errores.push(["programa", "Selecciona un programa de estudios."]);
+  if (!/^9\d{8}$/.test(celular)) errores.push(["celular", "El celular debe tener 9 dígitos y empezar con 9."]);
+  if (errores.length){
+    errores.forEach(([c]) => $("r-" + c).classList.add("bad"));
+    $("r-" + errores[0][0]).focus();
+    return aviso(msg, "err", errores[0][1]);
+  }
+
+  const btn = $("r-enviar"); btn.disabled = true; btn.textContent = "Guardando…";
+  try {
+    await crearDocs([                                   // el DNI es el ID: no se puede repetir
+      { coleccion: "estudiantes", id: dni, datos: { dni, nombres, apellidos, programa } },
+      { coleccion: "contactos", id: dni, datos: { dni, celular } }   // celular aparte y privado
+    ]);
+    $("r-form").reset();
+    aviso(msg, "ok", `¡Listo, ${nombres}! Ya estás registrado. Ahora puedes marcar tu asistencia.`);
+  } catch (err) {
+    if (yaExiste(err)){ $("r-dni").classList.add("bad"); aviso(msg, "err", "Este DNI ya está registrado. Ve a “Marcar asistencia”."); }
+    else { console.error(err); aviso(msg, "err", errorFirebase(err, "No se pudo guardar.")); }
+  } finally { btn.disabled = false; btn.textContent = "Registrar estudiante"; }
+});
+
+/* ============ Marcar asistencia ============ */
+let alumno = null;
+soloDigitos($("a-dni"), 8);
+function limpiarAsistencia(){ $("a-found").hidden = true; alumno = null; $("a-msg").className = "msg"; }
+$("a-dni").addEventListener("input", limpiarAsistencia);
+
+$("a-buscar").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  limpiarAsistencia();
+  const msg = $("a-msg");
+  const dni = $("a-dni").value.trim();
+  if (!/^\d{8}$/.test(dni)){ $("a-dni").classList.add("bad"); return aviso(msg, "err", "Escribe un DNI de 8 dígitos."); }
+  $("a-dni").classList.remove("bad");
+
+  const btn = $("a-btnBuscar"); btn.disabled = true; btn.textContent = "Buscando…";
+  try {
+    const est = await leerDoc("estudiantes", dni);
+    if (!est) return aviso(msg, "err", "Este DNI no está registrado. Primero usa “Registrar estudiante”.");
+    alumno = est;
+    $("a-nombre").textContent = `${est.nombres} ${est.apellidos}`;
+    $("a-programa").textContent = est.programa;
+    $("a-found").hidden = false;
+    const { fecha } = ahoraLima();
+    const ya = !!(await leerDoc("asistencias", `${dni}_${fecha}`));
+    $("a-confirmar").disabled = ya;
+    if (ya) aviso(msg, "info", "Ya marcaste tu asistencia hoy. Solo se permite una vez por día.");
+  } catch (err) {
+    console.error(err); aviso(msg, "err", errorFirebase(err, "No se pudo buscar."));
+  } finally { btn.disabled = false; btn.textContent = "Buscar"; }
+});
+
+$("a-confirmar").addEventListener("click", async () => {
+  if (!alumno) return;
+  const msg = $("a-msg");
+  const btn = $("a-confirmar"); btn.disabled = true; btn.textContent = "Guardando…";
+  const { fecha, hora } = ahoraLima();
+  try {
+    await crearDocs([{                                  // ID = DNI_FECHA: una sola marcación por día
+      coleccion: "asistencias", id: `${alumno.dni}_${fecha}`,
+      datos: { dni: alumno.dni, nombres: alumno.nombres, apellidos: alumno.apellidos, programa: alumno.programa, fecha, hora }
+    }]);
+    aviso(msg, "ok", `¡Asistencia registrada, ${alumno.nombres}! ${fechaBonita(fecha)} a las ${hora}.`);
+  } catch (err) {
+    if (yaExiste(err)) aviso(msg, "info", "Ya marcaste tu asistencia hoy. Solo se permite una vez por día.");
+    else { console.error(err); aviso(msg, "err", errorFirebase(err, "No se pudo guardar.")); btn.disabled = false; }
+  } finally { btn.textContent = "Confirmar mi asistencia"; }
+});
+
+/* ============ Listado ============ */
+let datos = [];
+function pintarListado(){
+  const q = normalizar($("l-buscar").value);
+  const lista = q ? datos.filter(r => normalizar(r.nombre).includes(q)) : datos;
+  const tbody = $("l-filas"); tbody.replaceChildren();
+  for (const r of lista){
+    const tr = document.createElement("tr");
+    [r.nombre, r.programa, fechaBonita(r.fecha), r.hora, ocultarDni(r.dni)].forEach((t, i) => {
+      const td = document.createElement("td");
+      if (i === 1){ const s = document.createElement("span"); s.className = "tag"; s.textContent = t; td.append(s); }
+      else td.textContent = t;
+      if (i === 4) td.className = "dni";
+      tr.append(td);
+    });
+    tbody.append(tr);
+  }
+  $("l-contador").textContent = q ? `Mostrando ${lista.length} de ${datos.length}` : `Total: ${datos.length}`;
+  const vacio = $("l-vacio");
+  vacio.hidden = lista.length > 0;
+  vacio.textContent = datos.length ? "Ningún nombre coincide con tu búsqueda." : "Aún no hay asistencias registradas.";
+}
+async function cargarListado(){
+  const msg = $("l-msg"); msg.className = "msg";
+  $("l-recargar").disabled = true;
+  try {
+    const filas = await ultimasAsistencias(1000);
+    datos = filas.map(f => ({ nombre: `${texto(f.nombres)} ${texto(f.apellidos)}`, programa: texto(f.programa),
+                               fecha: texto(f.fecha), hora: texto(f.hora), dni: texto(f.dni) }));
+    pintarListado();
+  } catch (err) {
+    console.error(err); aviso(msg, "err", errorFirebase(err, "No se pudo cargar el listado."));
+  } finally { $("l-recargar").disabled = false; }
+}
+$("l-buscar").addEventListener("input", pintarListado);
+$("l-recargar").addEventListener("click", cargarListado);
+
+ruta();
+
+/* Prueba de conexión al abrir la página */
+(async function(){
+  const el = $("estado");
+  try {
+    await ultimasAsistencias(1);
+    el.className = "estado ok"; el.textContent = "Conectado a la base de datos ✔";
+  } catch (err) {
+    console.error(err);
+    el.className = "estado mal"; el.textContent = errorFirebase(err, "Error de conexión");
+  }
+})();
+</script>
+</body>
+</html>
